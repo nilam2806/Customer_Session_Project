@@ -1,0 +1,41 @@
+eureka:
+    client:
+        fetch-registry: true
+        register-with-eureka: true
+        service-url:
+            defaultZone: http://192.168.97.42:8761/eureka/
+    instance:
+        hostname: 192.168.97.42
+        prefer-ip-address: true
+server:
+    port: 8087
+spring:
+    application:
+        name: API-GATEWAY
+
+    cloud:
+        gateway:
+            routes:
+              - id: customer-service
+                uri: lb://CUSTOMER-SERVICE
+                predicates:
+                  - Path=/api/v1/customers/**
+                filters:
+                  - AuthenticationFilter
+                  
+                  
+              - id: session-service
+                uri: lb://SESSION-SERVICE
+                predicates:
+                   - Path=/api/v1/session/**
+                filters:
+                   - AuthenticationFilter
+                   
+              - id: user-service
+                uri: lb://USER-SERVICE
+                predicates:
+                   - Path=/api/v1/users/**
+    main:
+        web-application-type: reactive         
+                  
+
